@@ -6,10 +6,25 @@ type ErrorReturn = {
   message?: string;
 };
 
+const getFrenchName = async (id: number): Promise<string | undefined> => {
+  try {
+    const res = await pokeApiClient.get(`/pokemon-species/${id}`);
+    const frEntry = res.data.names?.find(
+      (n: { language: { name: string }; name: string }) => n.language.name === "fr"
+    );
+    return frEntry?.name;
+  } catch {
+    return undefined;
+  }
+};
+
 export const getPokemon = async (id: number): Promise<PokeAPIResponse> => {
   try {
-    const res = await pokeApiClient.get(`/pokemon/${id}`);
-    return res.data;
+    const [pokemonRes, nameFr] = await Promise.all([
+      pokeApiClient.get(`/pokemon/${id}`),
+      getFrenchName(id),
+    ]);
+    return { ...pokemonRes.data, nameFr };
   } catch (error: ErrorReturn | any) {
     throw new Error(error.message);
   }

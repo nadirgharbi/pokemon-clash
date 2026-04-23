@@ -3,6 +3,7 @@
 interface PokeAPIResponse {
   id: number
   name: string
+  nameFr?: string
   base_experience: number
   height: number
   weight: number

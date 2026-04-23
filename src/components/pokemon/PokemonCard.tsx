@@ -11,6 +11,7 @@ import { capitalize } from "@/utils/string";
 import { POKEMON_TYPE_COLORS } from "@/utils/const";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 export const PokemonCard: React.FC<{ pokemon: PokeAPIResponse }> = ({ pokemon }) => {
   // #region Utilities
@@ -19,32 +20,36 @@ export const PokemonCard: React.FC<{ pokemon: PokeAPIResponse }> = ({ pokemon })
   // #endregion
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <Image src={pokemon.sprites.front_default} width={128} height={128} alt={`${pokemon.name} sprite`} className="mx-auto" />
-          {capitalize(pokemon.name)} {' '}
-          <span className="text-black/50">#{formatPokemonId}</span>
-        </CardTitle>
-        <div className="flex gap-1">
-          {pokemon.types.map(({ type }) => (
-            <Badge
-              key={type.name}
-              style={{ backgroundColor: POKEMON_TYPE_COLORS[type.name] ?? "#777" }}
-            >
-              {capitalize(type.name)}
-            </Badge>
-          ))}
-        </div>
+    <button className="cursor-pointer">
+      <Card className="hover:bg-black/10">
+        <CardHeader>
+          <CardTitle>
+            <Image
+              src={pokemon.sprites.front_shiny}
+              width={164}
+              height={164}
+              alt={`${pokemon.name} sprite`}
+              className="mx-auto"
+            />
+            {pokemon.nameFr ?? capitalize(pokemon.name)} <span className="text-white/70">#{formatPokemonId}</span>
+          </CardTitle>
+          <div className="flex gap-1">
+            {pokemon.types.map(({ type }) => (
+              <Badge key={type.name} style={{ backgroundColor: POKEMON_TYPE_COLORS[type.name] ?? "#777" }}>
+                {capitalize(type.name)}
+              </Badge>
+            ))}
+          </div>
 
-        {/* <CardDescription>
+          {/* <CardDescription>
           
         </CardDescription> */}
-      </CardHeader>
+        </CardHeader>
 
-      {/* <CardContent>
+        {/* <CardContent>
         <div>Abilities: {abilities}</div>
       </CardContent> */}
-    </Card>
+      </Card>
+    </button>
   );
 };
