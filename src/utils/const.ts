@@ -1,5 +1,5 @@
 // POKEAPI
-export const MAX_POKEMON_TO_FETCH = 151;
+export const MAX_POKEMON_TO_FETCH = 1025;
 
 // POKEMON TYPE COLORS
 export const POKEMON_TYPE_COLORS: Record<string, string> = {
