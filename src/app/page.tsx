@@ -37,8 +37,6 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
       <main className="flex flex-1 w-full  flex-col items-center gap-12 py-32 px-16 ">
-        {process.env.POKEAPI_URL}
-
         <p className="text-5xl font-bold text-center">Welcome to Pokemon Clash</p>
 
         {pokemons ? (
