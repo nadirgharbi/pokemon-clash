@@ -28,7 +28,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Toaster position="top-center" richColors />
-        {children}
+        <div className="flex flex-col flex-1 py-32 px-16 gap-6">
+          {children}
+        </div>
       </body>
     </html>
   );

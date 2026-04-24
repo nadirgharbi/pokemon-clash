@@ -1,55 +1,32 @@
 "use client";
-import { getPokemon, getPokemons } from "@/api/pokeapi/pokemon/getPokemon";
+import { getPokemons } from "@/api/pokeapi/pokemon/getPokemon";
 import { PokemonCard } from "@/components/pokemon/PokemonCard";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import Image from "next/image";
+import { MAX_POKEMON_TO_FETCH } from "@/utils/const";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import PokeZoneLogo from "@/assets/Pokzone.png";
+import Image from "next/image";
+
+const PAGE_SIZE = 30;
 
 export default function Home() {
-  const [pokemons, setPokemons] = useState<PokeAPIResponse[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const fetchPokemons = async () => {
-    setLoading(true);
-    try {
-      const data = await getPokemons();
-      if (data) {
-        setPokemons(data);
-        console.log(data);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    toast.promise(fetchPokemons(), {
-      loading: "Loading...",
-      success: (data) => `All pokemons has been fetch`,
-      error: "Error",
-    });
-  }, []);
-
   return (
     <div className="flex flex-col flex-1 items-center justify-center">
-      <main className="flex flex-1 w-full  flex-col items-center gap-12 py-32 px-16 ">
-        <p className="text-5xl font-bold text-center">Welcome to Pokemon Clash</p>
+      <div className="mt-10">
+        <Image src={PokeZoneLogo} alt="PokeZone Logo" width={250} height={250} />
+      </div>
 
-        {pokemons ? (
-          loading ? (
-            <Spinner className="w-80 h-80" />
-          ) : (
-            <div className="grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-6 w-full">
-              {pokemons.map((pokemon, id) => (
-                <PokemonCard pokemon={pokemon} key={id} />
-              ))}
-            </div>
-          )
-        ) : null}
+      <main className="flex flex-1 w-full flex-col items-center gap-12">
+        <p className="text-lg font-bold text-center">Bienvenue sur Pokézone</p>
+        <p className="text-xl font-bold text-center">L'application est en cours de développement. Ce que tu retrouveras ici :</p>
+        <ul className="list-disc">
+          <li className="text-emerald-200 font-bold">Un Pokédex national répertoriant les 1025 Pokémon</li>
+          <li>Toutes les informations à savoir sur chaque Pokémon</li>
+          <li>Un Nuzlocke Tracker pour suivre tes nuzlockes sur chaque jeu</li>
+          <li>Un Shiny Dex pour marquer tous les shinies obtenus</li>
+          <li>Et bien d'autres</li>
+        </ul>
       </main>
     </div>
   );
