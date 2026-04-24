@@ -1,11 +1,12 @@
 "use client";
 import { getPokemons } from "@/api/pokeapi/pokemon/getPokemon";
 import { PokemonCard } from "@/components/pokemon/PokemonCard";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { MAX_POKEMON_TO_FETCH } from "@/utils/const";
 import { useEffect, useRef, useState } from "react";
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 1025;
 const LS_KEY = "shinydex";
 
 async function fetchShiniesFromServer(): Promise<number[]> {
@@ -30,9 +31,12 @@ export default function ShinyDexPage() {
   const [pokemons, setPokemons] = useState<PokeAPIResponse[]>([]);
   const [shinies, setShinies] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [showingShinyObtained, setShowingShinyObtained] = useState(false);
   const offsetRef = useRef(0);
   const loadingRef = useRef(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const pokemonShown = showingShinyObtained ? pokemons.filter((p) => shinies.has(p.id)) : pokemons;
 
   useEffect(() => {
     fetchShiniesFromServer().then((serverShinies) => {
@@ -80,7 +84,7 @@ export default function ShinyDexPage() {
       (entries) => {
         if (entries[0].isIntersecting) loadMore();
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     if (sentinelRef.current) observer.observe(sentinelRef.current);
     return () => observer.disconnect();
@@ -95,14 +99,16 @@ export default function ShinyDexPage() {
         {obtained} / {MAX_POKEMON_TO_FETCH} shinies obtenus
       </p>
 
+      <Button className={"cursor-pointer font-bold"} onClick={() => setShowingShinyObtained((prev) => !prev)}>
+        {showingShinyObtained ? "Tout afficher" : "Afficher mes shinies"}
+      </Button>
+
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 w-full">
-        {pokemons.map((pokemon) => (
-          <button
-            key={pokemon.id}
-            onClick={() => toggleShiny(pokemon.id)}
-            className="text-left w-full"
-          >
-            <div className={`transition-opacity ${shinies.has(pokemon.id) ? "opacity-100 ring-2 ring-yellow-400 rounded-xl" : "opacity-50"}`}>
+        {pokemonShown.map((pokemon) => (
+          <button key={pokemon.id} onClick={() => toggleShiny(pokemon.id)} className="text-left w-full cursor-pointer">
+            <div
+              className={`hover:opacity-100 transition-opacity ${shinies.has(pokemon.id) ? "opacity-100 ring-2 ring-yellow-400 rounded-xl" : "opacity-75"}`}
+            >
               <PokemonCard pokemon={pokemon} />
             </div>
           </button>
